@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Courses - SkillForge</title>
+    <link rel="stylesheet" href="MyCourses.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">SkillForge</div>
+    <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="#">Courses</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="login.html" class="btn-primary">Logout</a>
+    </nav>
+</header>
+
+<section class="mycourses">
+
+    <h2 class="page-title">📚 My Courses</h2>
+
+    <!-- CATEGORIES -->
+    <div class="categories">
+        <span class="cat active" data-filter="all">All</span>
+        <span class="cat" data-filter="python">Python</span>
+        <span class="cat" data-filter="java">Java</span>
+        <span class="cat" data-filter="datascience">Data Science</span>
+        <span class="cat" data-filter="ai">AI</span>
+        <span class="cat" data-filter="ml">ML</span>
+        <span class="cat" data-filter="deep-learning">Deep Learning</span>
+    </div>
+
+    <!-- COURSE GRID -->
+    <div class="course-grid">
+
+        <!-- PYTHON -->
+        <div class="course-card" data-category="python beginner">
+            <div class="content">
+                <img src="python.png" class="course-img">
+                <h3 class="course-title">Python for Beginners</h3>
+                <p class="course-desc">
+                    Start your programming journey with Python basics, syntax, loops, and functions...
+                </p>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 70%"></div>
+                </div>
+                <p class="progress-text">70% Completed</p>
+            </div>
+            <button class="continue-btn">Continue Learning</button>
+        </div>
+
+        <!-- JAVA -->
+        <div class="course-card" data-category="java intermediate">
+            <div class="content">
+                <img src="java.png" class="course-img">
+                <h3 class="course-title">Java Full Stack Development</h3>
+                <p class="course-desc">
+                    Learn backend, frontend, Spring Boot, REST APIs, and build full-stack applications...
+                </p>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 45%"></div>
+                </div>
+                <p class="progress-text">45% Completed</p>
+            </div>
+            <button class="continue-btn">Continue Learning</button>
+        </div>
+
+        <!-- DATA SCIENCE / ML -->
+        <div class="course-card" data-category="ai ml datascience deep-learning">
+            <div class="content">
+                <img src="datascience.png" class="course-img">
+                <h3 class="course-title">Data Science & ML</h3>
+                <p class="course-desc">
+                    Master machine learning, Pandas, NumPy, and data visualization techniques...
+                </p>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 20%"></div>
+                </div>
+                <p class="progress-text">20% Completed</p>
+            </div>
+            <button class="continue-btn">Continue Learning</button>
+        </div>
+
+        <!-- DEEP LEARNING -->
+        <div class="course-card" data-category="deep-learning ai ml datascience">
+            <div class="content">
+                <img src="deeplearning.png" class="course-img">
+                <h3 class="course-title">Deep Learning</h3>
+                <p class="course-desc">
+                    Learn the basics of neural networks, CNNs for images, RNNs for sequential data...
+                </p>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 10%"></div>
+                </div>
+                <p class="progress-text">10% Completed</p>
+            </div>
+            <button class="continue-btn">Continue Learning</button>
+        </div>
+
+    </div>
+
+
+    <!-- CERTIFICATES SECTION -->
+    <h2 class="cert-title">🏆 Your Certificates</h2>
+
+    <div class="cert-grid">
+        <div class="cert-card">
+            <img src="cert1.png" class="cert-img">
+            <h3>Python Basics Certificate</h3>
+            <p>Issued on: 15 Jan 2025</p>
+            <button class="download-btn">Download Certificate</button>
+        </div>
+
+        <div class="cert-card">
+            <img src="cert2.png" class="cert-img">
+            <h3>Java Full Stack Bootcamp</h3>
+            <p>Issued on: 02 Feb 2025</p>
+            <button class="download-btn">Download Certificate</button>
+        </div>
+    </div>
+
+</section>
+
+<script>
+const categoryButtons = document.querySelectorAll(".cat");
+const courseCards = document.querySelectorAll(".course-card");
+
+categoryButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+
+        categoryButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const filter = btn.dataset.filter;
+
+        courseCards.forEach(card => {
+            const category = card.dataset.category;
+
+            if (filter === "all" || category.includes(filter)) {
+                card.style.display = "flex";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    });
+});
+</script>
+
+</body>
+</html>

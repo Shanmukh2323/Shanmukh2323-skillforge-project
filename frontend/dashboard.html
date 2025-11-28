@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillForge Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2 class="logo">SkillForge</h2>
+
+        <nav class="menu">
+            <a href="#" class="active">🏠 Dashboard</a>
+            <a href="MyCourses.html">📚 My Courses</a>
+            <a href="#">📊 Progress</a>
+            <a href="#">📅 Schedule</a>
+            <a href="#">👩‍🏫 Mentors</a>
+            <a href="#">🎉 Events</a>
+            <a href="#">⚙️ Settings</a>
+            <a href="login.html" class="logout">🚪 Logout</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+    <h2 class="welcome">Welcome Back 👋</h2>
+
+    <div class="top-right">
+        <input type="text" class="search" placeholder="Search...">
+
+        <span class="icon-btn">🔔</span>
+        <span class="icon-btn">✉️</span>
+        <span class="icon-btn" id="themeToggle">🌗</span>
+
+        <div class="profile">👤</div>
+    </div>
+</header>
+
+
+        <!-- DASHBOARD CARDS -->
+        <section class="grid">
+
+            <div class="card">
+                <h3>📘 Your Courses</h3>
+                <p>Continue learning your enrolled courses.</p>
+            </div>
+
+            <div class="card">
+                <h3>📈 Learning Progress</h3>
+                <p>Track your study time and milestones.</p>
+            </div>
+
+            <div class="card">
+                <h3>🤖 AI Recommendations</h3>
+                <p>Courses based on your current performance.</p>
+            </div>
+
+            <div class="card">
+                <h3>📅 Today's Schedule</h3>
+                <p>Check what's planned today.</p>
+            </div>
+
+        </section>
+
+        <h2 class="section-title fade">✨ AI Recommendations For You</h2>
+
+<div class="ai-grid fade">
+    <div class="ai-card">
+        <span class="ai-icon">🤖</span>
+        <h3>Master Python Basics</h3>
+        <p>Based on your recent quiz performance.</p>
+        <button class="ai-btn">View Course</button>
+    </div>
+
+    <div class="ai-card">
+        <span class="ai-icon">📈</span>
+        <h3>Data Science Path</h3>
+        <p>Recommended to build strong ML foundations.</p>
+        <button class="ai-btn">View Course</button>
+    </div>
+
+    <div class="ai-card">
+        <span class="ai-icon">🧠</span>
+        <h3>Deep Learning Beginner Pack</h3>
+        <p>Your AI scores show you're ready for this.</p>
+        <button class="ai-btn">View Course</button>
+    </div>
+</div>
+
+
+    </main>
+</div>
+
+<script>
+    const toggle = document.getElementById('themeToggle');
+
+    toggle.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme');
+
+        if (current === 'dark') {
+            document.documentElement.removeAttribute('data-theme');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    });
+</script>
+
+</body>
+</html>

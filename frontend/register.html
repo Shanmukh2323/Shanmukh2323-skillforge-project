@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - SkillForge</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<header class="navbar">
+    <div class="logo">SkillForge</div>
+    <nav class="nav-links">
+        <a href="#">Courses</a>
+        <a href="#">Features</a>
+        <a href="#">Pricing</a>
+        <a href="login.html">Sign In</a>
+        <a href="register.html" class="btn-primary">Get Started</a>
+    </nav>
+</header>
+<body class="register-body">
+
+    <!-- Logo -->
+    <img src="logo.png" class="register-logo" alt="SkillForge Logo">
+
+    <div class="register-wrapper">
+
+        <!-- Left Illustration -->
+        <div class="register-left">
+            <img src="Register-logo.png" class="register-illustration" alt="Illustration">
+        </div>
+
+        <!-- Right Form Card -->
+        <div class="register-card">
+            <h2>Create an account</h2>
+            <form id="registerForm">
+                <input type="text" id="regName" placeholder="Name" required>
+                <input type="email" id="regEmail" placeholder="Email" required>
+                <input type="password" id="regPassword" placeholder="Password" required>
+
+                <button type="submit" class="btn-primary full">Sign Up</button>
+
+                <p class="small-text">
+                    Already have an account? <a href="login.html">Log in</a>
+                </p>
+            </form>
+
+        </div>
+
+    </div>
+
+    <script>
+document.getElementById("registerForm").addEventListener("submit", async function(e){
+    e.preventDefault();
+
+    let name = document.getElementById("regName").value;
+    let email = document.getElementById("regEmail").value;
+    let password = document.getElementById("regPassword").value;
+
+    const response = await fetch("http://localhost:8080/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password })
+    });
+
+    const data = await response.json();
+
+    alert(data.message);
+
+    if (data.message === "User Registered Successfully!") {
+        window.location.href = "login.html";
+    }
+});
+</script>
+
+
+</body>
+</html>
