@@ -1,0 +1,4 @@
+User Flows
+Login -> Dashboard -> Courses -> Quiz -> Results
+Instructor: Dashboard -> Create Course -> Upload Lessons -> Assignments
+Admin: Dashboard -> Manage Users -> Manage Courses -> Analytics

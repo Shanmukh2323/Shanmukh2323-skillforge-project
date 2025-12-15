@@ -1,0 +1,5 @@
+Primary: #4B7BE5
+Secondary: #1ABC9C
+Background: #F5F7FA
+Text Dark: #222
+Text Light: #555

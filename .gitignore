@@ -1,0 +1,19 @@
+# Node modules
+backend/node_modules/
+
+# Environment files
+.env
+
+# Logs
+*.log
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Live server cache
+.vscode/
+
+# Temporary files
+*.tmp
+*.cache
