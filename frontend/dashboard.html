@@ -9,6 +9,11 @@
 
 </head>
 <body>
+    <script>
+    if (!localStorage.getItem("token")) {
+    window.location.href = "login.html";
+    }
+    </script>
 
 <div class="app">
 
@@ -24,7 +29,7 @@
             <a href="#">👩‍🏫 Mentors</a>
             <a href="#">🎉 Events</a>
             <a href="#">⚙️ Settings</a>
-            <a href="login.html" class="logout">🚪 Logout</a>
+            <a href="#" class="logout" onclick="logout()">🚪 Logout</a>
         </nav>
     </aside>
 
@@ -114,6 +119,14 @@
         }
     });
 </script>
+<script>
+function logout() {
+    localStorage.clear();
+    alert("Logged out successfully!");
+    window.location.href = "login.html";
+}
+</script>
+
 
 </body>
 </html>

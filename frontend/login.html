@@ -8,6 +8,25 @@
 </head>
 
 <body>
+    <script>
+// If a token exists → user already logged in
+if (localStorage.getItem("token")) {
+
+    const role = localStorage.getItem("role");
+
+    // Redirect based on role
+    if (role === "admin") {
+        window.location.href = "admin_dashboard.html";
+    }
+    else if (role === "instructor") {
+        window.location.href = "instructor_dashboard.html";
+    }
+    else {
+        window.location.href = "dashboard.html"; // student
+    }
+}
+</script>
+
 
 <header class="navbar">
     <div class="logo">SkillForge</div>
@@ -17,19 +36,15 @@
         <a href="#">Features</a>
         <a href="#">Pricing</a>
         <a href="login.html">Sign In</a>
-        <a href="register.html" class="btn-primary">Get Started</a>
     </nav>
 </header>
 
-
 <div class="login-wrapper">
 
-    <!-- Left Illustration -->
     <div class="login-left">
         <img src="LOGIN.png" alt="Login Illustration">
     </div>
 
-    <!-- Right Login Card -->
     <div class="login-card">
         <h2>Welcome Back</h2>
 
@@ -65,19 +80,28 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     const data = await response.json();
 
     if (data.token) {
-        // Save token
         localStorage.setItem("token", data.token);
         localStorage.setItem("username", data.name);
+        localStorage.setItem("role", data.role);
 
         alert("Login Successful!");
-        window.location.href = "dashboard.html";
+
+        // ROLE-BASED REDIRECTS
+        if (data.role === "admin") {
+            window.location.href = "admin_dashboard.html";
+        } 
+        else if (data.role === "instructor") {
+            window.location.href = "instructor_dashboard.html";
+        } 
+        else {
+            window.location.href = "dashboard.html"; // student
+        }
     } 
     else {
         alert(data.message);
     }
 });
 </script>
-
 
 </body>
 </html>

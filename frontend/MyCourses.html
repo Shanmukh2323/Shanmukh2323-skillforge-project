@@ -14,7 +14,7 @@
         <a href="index.html">Home</a>
         <a href="#">Courses</a>
         <a href="dashboard.html">Dashboard</a>
-        <a href="login.html" class="btn-primary">Logout</a>
+        <a href="#" onclick="logout()" class="btn-primary">Logout</a>
     </nav>
 </header>
 
@@ -151,6 +151,13 @@ categoryButtons.forEach(btn => {
         });
     });
 });
+</script>
+
+<script>
+function logout() {
+    localStorage.clear();
+    window.location.href = "login.html";
+}
 </script>
 
 </body>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Courses - Instructor</title>
+    <link rel="stylesheet" href="instructor_courses.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<script>
+// PROTECT ROUTE
+if (!localStorage.getItem("token") || localStorage.getItem("role") !== "instructor") {
+    window.location.href = "login.html";
+}
+</script>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2 class="logo">SkillForge</h2>
+
+        <nav class="menu">
+            <a href="instructor_dashboard.html">🏠 Dashboard</a>
+            <a href="instructor_courses.html" class="active">📚 My Courses</a>
+            <a href="add_course_instructor.html">➕ Add New Course</a>
+            <a href="instructor_students.html">👥 Manage Students</a>
+            <a href="instructor_assignments.html">📝 Assignments</a>
+            <a href="instructor_quizzes.html">❓ Quizzes</a>
+            <a href="instructor_results.html">📈 Results</a>
+            <a href="instructor_analytics.html">📊 Analytics</a>
+            <a href="#" onclick="logout()">🚪 Logout</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+        <header class="topbar">
+            <h2 class="title">📚 My Courses</h2>
+
+            <div class="top-right">
+                <input type="text" class="search" placeholder="Search courses...">
+                <span class="icon-btn">🔔</span>
+                <span class="icon-btn">✉️</span>
+                <span class="icon-btn" id="themeToggle">🌗</span>
+                <div class="profile">👤</div>
+            </div>
+        </header>
+
+        <section class="course-list" id="courseList">
+            <!-- Courses will load here -->
+        </section>
+    </main>
+</div>
+
+<script>
+// ---------------- THEME TOGGLE ----------------
+document.getElementById("themeToggle").addEventListener("click", () => {
+    const current = document.documentElement.getAttribute("data-theme");
+    if (current === "dark") {
+        document.documentElement.removeAttribute("data-theme");
+    } else {
+        document.documentElement.setAttribute("data-theme", "dark");
+    }
+});
+
+// ---------------- LOGOUT ----------------
+function logout() {
+    localStorage.clear();
+    window.location.href = "login.html";
+}
+
+// ---------------- LOAD COURSES ----------------
+async function loadCourses() {
+    const container = document.getElementById("courseList");
+
+    const res = await fetch("http://localhost:8080/instructor/courses", {
+        headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+    });
+
+    const courses = await res.json();
+
+    if (courses.length === 0) {
+        container.innerHTML = "<p class='empty'>You have not created any courses yet.</p>";
+        return;
+    }
+
+    container.innerHTML = "";
+
+    courses.forEach(course => {
+        const card = document.createElement("div");
+        card.className = "course-card";
+
+        card.innerHTML = `
+            <img src="${course.image || 'https://via.placeholder.com/300'}" class="course-img" />
+
+            <div class="course-info">
+                <h3>${course.title}</h3>
+                <p>${course.category || "Uncategorized"}</p>
+                <p class="desc">${course.description.substring(0, 80)}...</p>
+            </div>
+
+            <div class="course-actions">
+                <button onclick="manageCourse(${course.id})">Manage</button>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+function manageCourse(id) {
+    // Save selected course
+    localStorage.setItem("selectedCourse", id);
+    window.location.href = "instructor_course_manage.html";
+}
+
+loadCourses();
+</script>
+
+</body>
+</html>

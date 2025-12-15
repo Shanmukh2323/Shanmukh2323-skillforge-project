@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Course - Instructor</title>
+    <link rel="stylesheet" href="instructor_course_manage.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<script>
+// PROTECT ROUTE
+if (!localStorage.getItem("token") || localStorage.getItem("role") !== "instructor") {
+    window.location.href = "login.html";
+}
+
+// Get selected course
+const courseId = localStorage.getItem("selectedCourse");
+if (!courseId) {
+    alert("No course selected!");
+    window.location.href = "instructor_courses.html";
+}
+</script>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2 class="logo">SkillForge</h2>
+
+        <nav class="menu">
+            <a href="instructor_dashboard.html">🏠 Dashboard</a>
+            <a href="instructor_courses.html" class="active">📚 My Courses</a>
+            <a href="add_course_instructor.html">➕ Add New Course</a>
+            <a href="instructor_students.html">👥 Manage Students</a>
+            <a href="instructor_assignments.html">📝 Assignments</a>
+            <a href="instructor_quizzes.html">❓ Quizzes</a>
+            <a href="instructor_results.html">📈 Results</a>
+            <a href="instructor_analytics.html">📊 Analytics</a>
+            <a href="#" onclick="logout()">🚪 Logout</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <h2 class="title" id="courseTitle">Course Title</h2>
+
+            <div class="top-right">
+                <input type="text" class="search" placeholder="Search student...">
+                <span class="icon-btn">🔔</span>
+                <span class="icon-btn">✉️</span>
+                <span class="icon-btn" id="themeToggle">🌗</span>
+                <div class="profile">I</div>
+            </div>
+        </header>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('studentsTab')">👥 Students</button>
+            <button class="tab-btn" onclick="showTab('assignmentsTab')">📝 Assignments</button>
+            <button class="tab-btn" onclick="showTab('quizzesTab')">❓ Quizzes</button>
+            <button class="tab-btn" onclick="showTab('analyticsTab')">📊 Analytics</button>
+        </div>
+
+        <!-- TAB CONTENT SECTIONS -->
+        <section id="studentsTab" class="tab-section active">
+            <h3>Enrolled Students</h3>
+            <button class="add-btn" onclick="openAddStudentPopup()">➕ Add Student</button>
+
+            <div id="studentList" class="list"></div>
+        </section>
+
+        <section id="assignmentsTab" class="tab-section">
+            <h3>Assignments</h3>
+            <button class="add-btn">➕ Add Assignment</button>
+
+            <div id="assignmentList" class="list"></div>
+        </section>
+
+        <section id="quizzesTab" class="tab-section">
+            <h3>Quizzes</h3>
+            <button class="add-btn">➕ Add Quiz</button>
+
+            <div id="quizList" class="list"></div>
+        </section>
+
+        <section id="analyticsTab" class="tab-section">
+            <h3>Analytics</h3>
+            <p>Graphs and AI insights will appear here.</p>
+        </section>
+
+    </main>
+</div>
+
+<!-- ADD STUDENT POPUP -->
+<div id="addStudentPopup" class="popup">
+    <div class="popup-box">
+        <h3>Add Student</h3>
+        <input id="studentName" type="text" placeholder="Student Name">
+        <input id="studentEmail" type="email" placeholder="Student Email">
+        <button onclick="addStudent()">Add</button>
+        <button class="close-btn" onclick="closeAddStudentPopup()">Cancel</button>
+    </div>
+</div>
+
+<script>
+// THEME TOGGLE
+document.getElementById("themeToggle").addEventListener("click", () => {
+    const current = document.documentElement.getAttribute("data-theme");
+    if (current) document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", "dark");
+});
+
+// LOGOUT
+function logout() {
+    localStorage.clear();
+    window.location.href = "login.html";
+}
+
+// SWITCH TABS
+function showTab(tabId) {
+    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+    document.querySelectorAll(".tab-section").forEach(sec => sec.classList.remove("active"));
+
+    event.target.classList.add("active");
+    document.getElementById(tabId).classList.add("active");
+}
+
+// LOAD COURSE INFO
+async function loadCourse() {
+    const res = await fetch(`http://localhost:8080/instructor/courses`, {
+        headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+    });
+
+    const data = await res.json();
+    const course = data.find(c => c.id == courseId);
+
+    document.getElementById("courseTitle").textContent = course.title;
+}
+
+// LOAD STUDENTS
+async function loadStudents() {
+    const res = await fetch(`http://localhost:8080/instructor/course/${courseId}/students`, {
+        headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+    });
+
+    const students = await res.json();
+    const list = document.getElementById("studentList");
+    list.innerHTML = "";
+
+    students.forEach(s => {
+        list.innerHTML += `
+            <div class="item">
+                <h4>${s.name}</h4>
+                <p>${s.email}</p>
+                <p>Progress: ${s.progress || 0}%</p>
+            </div>
+        `;
+    });
+}
+
+// ADD STUDENT
+async function addStudent() {
+    const name = document.getElementById("studentName").value;
+    const email = document.getElementById("studentEmail").value;
+
+    const res = await fetch(`http://localhost:8080/instructor/course/${courseId}/add-student`, {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token"),
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, email })
+    });
+
+    const data = await res.json();
+    alert(data.message);
+
+    closeAddStudentPopup();
+    loadStudents();
+}
+
+function openAddStudentPopup() {
+    document.getElementById("addStudentPopup").style.display = "flex";
+}
+
+function closeAddStudentPopup() {
+    document.getElementById("addStudentPopup").style.display = "none";
+}
+
+// INITIAL LOAD
+loadCourse();
+loadStudents();
+</script>
+
+</body>
+</html>

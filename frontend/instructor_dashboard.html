@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Instructor Dashboard - SkillForge</title>
+    <link rel="stylesheet" href="instructor_dashboard.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<script>
+// ---------------- Protect Route ----------------
+if (!localStorage.getItem("token")) {
+    window.location.href = "login.html";
+}
+
+if (localStorage.getItem("role") !== "instructor") {
+    alert("Access Denied: Only Instructors allowed!");
+    window.location.href = "login.html";
+}
+</script>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2 class="logo">SkillForge</h2>
+
+        <nav class="menu">
+            <a href="instructor_dashboard.html" class="active">🏠 Dashboard</a>
+            <a href="instructor_courses.html">📚 My Courses</a>
+            <a href="add_course_instructor.html">➕ Add New Course</a>
+            <a href="instructor_manage_students.html">👥 Manage Students</a>
+            <a href="instructor_assignments.html">📝 Assignments</a>
+            <a href="instructor_quizzes.html">❓ Quizzes</a>
+            <a href="instructor_results.html">📈 Results</a>
+            <a href="instructor_analytics.html">📊 Analytics</a>
+            <a href="#" class="logout" onclick="logout()">🚪 Logout</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <h2 class="welcome">Welcome Instructor 👨‍🏫</h2>
+
+            <div class="top-right">
+                <input type="text" class="search" placeholder="Search...">
+                <span class="icon-btn">🔔</span>
+                <span class="icon-btn">✉️</span>
+                <span class="icon-btn" id="themeToggle">🌗</span>
+                <div class="profile">👤</div>
+            </div>
+        </header>
+
+        <!-- DASHBOARD CARDS -->
+        <section class="grid fade">
+            <div class="card">
+                <h3>📚 My Courses</h3>
+                <h1 class="big-number" id="totalCourses">0</h1>
+            </div>
+
+            <div class="card">
+                <h3>👥 Total Students</h3>
+                <h1 class="big-number" id="totalStudents">0</h1>
+            </div>
+
+            <div class="card">
+                <h3>👁️ Course Views</h3>
+                <h1 class="big-number" id="courseViews">0</h1>
+            </div>
+
+            <div class="card">
+                <h3>📝 New Enrollments</h3>
+                <h1 class="big-number" id="newEnrollments">0</h1>
+            </div>
+        </section>
+
+        <!-- Section Title -->
+        <h2 class="section-title fade">📊 Performance Overview</h2>
+
+        <div class="analytics-grid fade">
+            <div class="analytics-card">
+                <h3>🔥 Top Performing Course</h3>
+                <p>Your best course rank will appear here.</p>
+            </div>
+
+            <div class="analytics-card">
+                <h3>🎯 Student Engagement</h3>
+                <p>Track how students interact with your lessons.</p>
+            </div>
+
+            <div class="analytics-card">
+                <h3>⭐ Ratings Overview</h3>
+                <p>See average course ratings here.</p>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+// ---------------- THEME TOGGLE ----------------
+const toggle = document.getElementById("themeToggle");
+toggle.addEventListener("click", () => {
+    const current = document.documentElement.getAttribute("data-theme");
+    if (current === "dark") {
+        document.documentElement.removeAttribute("data-theme");
+    } else {
+        document.documentElement.setAttribute("data-theme", "dark");
+    }
+});
+
+// ---------------- LOGOUT ----------------
+function logout() {
+    localStorage.clear();
+    window.location.href = "login.html";
+}
+
+// ---------------- Load Dashboard Data ----------------
+async function loadInstructorDashboard() {
+    try {
+        const res = await fetch("http://localhost:8080/instructor/dashboard", {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            }
+        });
+
+        const data = await res.json();
+
+        // Update UI
+        document.getElementById("totalCourses").textContent = data.totalCourses;
+        document.getElementById("totalStudents").textContent = data.totalStudents;
+        document.getElementById("courseViews").textContent = data.views;
+        document.getElementById("newEnrollments").textContent = data.newEnrollments;
+
+    } catch (err) {
+        console.error("Dashboard Load Error:", err);
+        alert("Unable to load instructor dashboard data.");
+    }
+}
+
+// Auto-load dashboard
+loadInstructorDashboard();
+</script>
+
+</body>
+</html>

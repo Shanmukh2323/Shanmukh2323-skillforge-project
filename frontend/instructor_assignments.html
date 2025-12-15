@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignments - SkillForge Instructor</title>
+    <link rel="stylesheet" href="instructor_assignments.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<script>
+// PROTECT ROUTE (NO courseId HERE!)
+if (!localStorage.getItem("token") || localStorage.getItem("role") !== "instructor") {
+    window.location.href = "login.html";
+}
+</script>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2 class="logo">SkillForge</h2>
+
+        <nav class="menu">
+            <a href="instructor_dashboard.html">🏠 Dashboard</a>
+            <a href="instructor_courses.html">📚 My Courses</a>
+            <a href="add_course_instructor.html">➕ Add New Course</a>
+            <a href="instructor_course_manage.html">👥 Manage Course</a>
+            <a href="instructor_assignments.html" class="active">📝 Assignments</a>
+            <a href="instructor_quizzes.html">❓ Quizzes</a>
+            <a href="instructor_results.html">📈 Results</a>
+            <a href="instructor_analytics.html">📊 Analytics</a>
+            <a href="#" onclick="logout()">🚪 Logout</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN SECTION -->
+    <main class="main">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <h2 class="title">📝 Assignments</h2>
+
+            <div class="top-right">
+                <input type="text" class="search" placeholder="Search assignment...">
+                <span class="icon-btn">🔔</span>
+                <span class="icon-btn">✉️</span>
+                <span class="icon-btn" id="themeToggle">🌗</span>
+            </div>
+        </header>
+
+        <!-- ADD ASSIGNMENT -->
+        <button class="add-btn" onclick="openAddPopup()">➕ Create Assignment</button>
+
+        <!-- ASSIGNMENT LIST -->
+        <div id="assignmentList" class="assignments"></div>
+
+    </main>
+</div>
+
+<!-- POPUP -->
+<div class="popup" id="popup">
+    <div class="popup-box">
+
+        <h3>Create Coding Assignment</h3>
+
+        <label>Assignment Title</label>
+        <input type="text" id="title" placeholder="Enter assignment title">
+
+        <label>Description</label>
+        <textarea id="description" placeholder="Describe the problem..."></textarea>
+
+        <label>Starter Code (optional)</label>
+        <textarea id="starterCode" placeholder="function solve() {\n   // your code\n}"></textarea>
+
+        <label>Test Cases (JSON Format)</label>
+        <textarea id="testCases" placeholder='[
+  { "input": "5", "output": "120" },
+  { "input": "7", "output": "5040" }
+]'></textarea>
+
+        <label>Due Date</label>
+        <input type="date" id="dueDate">
+
+        <button onclick="createAssignment()">Create Assignment</button>
+        <button class="close-btn" onclick="closePopup()">Cancel</button>
+
+    </div>
+</div>
+
+
+<!-- JS FILE (MUST BE LAST SO PAGE LOADS FIRST) -->
+<script src="instructor_assignments.js"></script>
+
+</body>
+</html>

@@ -6,63 +6,82 @@
     <title>Register - SkillForge</title>
     <link rel="stylesheet" href="styles.css" />
 </head>
+
+<body class="register-body">
+    
+    <!-- BLOCK REGISTER PAGE IF ALREADY LOGGED IN -->
+    <script>
+    if (localStorage.getItem("token")) {
+    alert("You are already logged in!");
+    window.location.href = "dashboard.html";
+    }
+    </script>
+
 <header class="navbar">
     <div class="logo">SkillForge</div>
     <nav class="nav-links">
+        <a href="index.html">Home</a>
         <a href="#">Courses</a>
         <a href="#">Features</a>
         <a href="#">Pricing</a>
         <a href="login.html">Sign In</a>
-        <a href="register.html" class="btn-primary">Get Started</a>
     </nav>
 </header>
-<body class="register-body">
 
-    <!-- Logo -->
-    <img src="logo.png" class="register-logo" alt="SkillForge Logo">
+<img src="logo.png" class="register-logo" alt="SkillForge Logo">
 
-    <div class="register-wrapper">
+<div class="register-wrapper">
 
-        <!-- Left Illustration -->
-        <div class="register-left">
-            <img src="Register-logo.png" class="register-illustration" alt="Illustration">
+    <div class="register-left">
+        <img src="Register-logo.png" class="register-illustration" alt="Illustration">
+    </div>
+
+    <div class="register-card">
+        <h2>Create an account</h2>
+
+        <form id="registerForm">
+            <input type="text" id="regName" placeholder="Name" required>
+            <input type="email" id="regEmail" placeholder="Email" required>
+            <input type="password" id="regPassword" placeholder="Password" required>
+
+            <!-- ROLE DROPDOWN -->
+        <div class="role-signup-row">
+            <select id="regRole" class="role-select" required>
+                <option value="student">Student</option>
+                <option value="instructor">Instructor</option>
+                <option value="admin">Admin</option>
+            </select>
+
+            <button type="submit" class="btn-primary signup-btn">Sign Up</button>
         </div>
 
-        <!-- Right Form Card -->
-        <div class="register-card">
-            <h2>Create an account</h2>
-            <form id="registerForm">
-                <input type="text" id="regName" placeholder="Name" required>
-                <input type="email" id="regEmail" placeholder="Email" required>
-                <input type="password" id="regPassword" placeholder="Password" required>
+        <p class="already-text">
+            Already have an account? <a href="login.html">Log in</a>
+        </p>
 
-                <button type="submit" class="btn-primary full">Sign Up</button>
-
-                <p class="small-text">
-                    Already have an account? <a href="login.html">Log in</a>
-                </p>
-            </form>
-
-        </div>
+        </form>
 
     </div>
 
-    <script>
+</div>
+
+
+<script>
 document.getElementById("registerForm").addEventListener("submit", async function(e){
     e.preventDefault();
 
     let name = document.getElementById("regName").value;
     let email = document.getElementById("regEmail").value;
     let password = document.getElementById("regPassword").value;
+    let role = document.getElementById("regRole").value;
 
     const response = await fetch("http://localhost:8080/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password })
+        body: JSON.stringify({ name, email, password, role })
     });
 
     const data = await response.json();
-
     alert(data.message);
 
     if (data.message === "User Registered Successfully!") {
@@ -70,7 +89,6 @@ document.getElementById("registerForm").addEventListener("submit", async functio
     }
 });
 </script>
-
 
 </body>
 </html>

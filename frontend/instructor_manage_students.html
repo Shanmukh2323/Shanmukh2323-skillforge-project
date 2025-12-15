@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Students - SkillForge Instructor</title>
+    <link rel="stylesheet" href="instructor_manage_students.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<script>
+// PROTECT ROUTE
+if (!localStorage.getItem("token") || localStorage.getItem("role") !== "instructor") {
+    window.location.href = "login.html";
+}
+
+// CHECK COURSE SELECTED
+if (!localStorage.getItem("selectedCourse")) {
+    alert("No course selected!");
+    window.location.href = "instructor_courses.html";
+}
+</script>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2 class="logo">SkillForge</h2>
+
+        <nav class="menu">
+            <a href="instructor_dashboard.html">🏠 Dashboard</a>
+            <a href="instructor_courses.html">📚 My Courses</a>
+            <a href="add_course_instructor.html">➕ Add New Course</a>
+            <a href="instructor_manage_students.html" class="active">👥 Manage Students</a>
+            <a href="instructor_assignments.html">📝 Assignments</a>
+            <a href="instructor_quizzes.html">❓ Quizzes</a>
+            <a href="instructor_results.html">📈 Results</a>
+            <a href="instructor_analytics.html">📊 Analytics</a>
+            <a href="#" onclick="logout()">🚪 Logout</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <h2>👥 Manage Students</h2>
+
+            <div class="top-right">
+                <input type="text" class="search" placeholder="Search students...">
+                <span class="icon-btn">🔔</span>
+                <span class="icon-btn">✉️</span>
+                <span class="icon-btn" id="themeToggle">🌗</span>
+            </div>
+        </header>
+
+        <button class="add-btn" onclick="openAddPopup()">➕ Add Student</button>
+
+        <div id="studentList" class="students"></div>
+
+    </main>
+</div>
+
+<!-- POPUP FORM -->
+<div class="popup" id="popup">
+    <div class="popup-box">
+        <h3>Add Student</h3>
+
+        <input type="text" id="studentName" placeholder="Student Name">
+        <input type="email" id="studentEmail" placeholder="Student Email">
+
+        <button onclick="addStudent()">Add</button>
+        <button class="close-btn" onclick="closePopup()">Cancel</button>
+    </div>
+</div>
+
+<script src="instructor_manage_students.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SkillForge</title>
+    <link rel="stylesheet" href="admin_dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- TOKEN CHECK -->
+    <script>
+    if (localStorage.getItem("role") !== "admin") {
+    alert("Access Denied: Only Admins can open this page!");
+    window.location.href = "login.html";
+    }
+    </script>
+
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2 class="logo">SkillForge</h2>
+
+        <nav class="menu">
+            <a href="#" class="active">🏠 Dashboard</a>
+            <p class="menu-title">User Management</p>
+            <a href="#">👥 All Users</a>
+            <a href="#">👤 Students</a>
+            <a href="#">👨‍🏫 Instructors</a>
+
+            <p class="menu-title">Course Management</p>
+            <a href="add_course.html">📚 All Courses</a>
+            <a href="add_course.html">➕ Add Course</a>
+
+            <p class="menu-title">Categories</p>
+            <a href="#">📂 Manage Categories</a>
+
+            <p class="menu-title">Analytics & Reports</p>
+            <a href="#">📊 Analytics</a>
+            <a href="#">💬 Reports / Complaints</a>
+
+            <p class="menu-title">System</p>
+            <a href="#">⚙️ Settings</a>
+            <a href="#" class="logout" onclick="logout()">🚪 Logout</a>
+
+        </nav>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+            <h2 class="welcome">Admin Dashboard 👑</h2>
+
+            <div class="top-right">
+                <input type="text" class="search" placeholder="Search...">
+                <span class="icon-btn">🔔</span>
+                <span class="icon-btn">✉️</span>
+                <span class="icon-btn" id="themeToggle">🌗</span>
+                <div class="profile">A</div>
+            </div>
+        </header>
+
+        <!-- DASHBOARD CARDS -->
+        <section class="admin-grid fade">
+
+            <div class="card">
+                <h3>👥 Total Students</h3>
+                <h1 class="big-number">1,240</h1>
+            </div>
+
+            <div class="card">
+                <h3>👨‍🏫 Total Instructors</h3>
+                <h1 class="big-number">42</h1>
+            </div>
+
+            <div class="card">
+                <h3>📚 Total Courses</h3>
+                <h1 class="big-number">87</h1>
+            </div>
+
+            <div class="card">
+                <h3>📝 New Registrations</h3>
+                <h1 class="big-number">58</h1>
+            </div>
+
+        </section>
+
+        <!-- SECTION TITLE -->
+        <h2 class="section-title fade">📊 Platform Analytics</h2>
+
+        <div class="analytics-grid fade">
+            <div class="analytics-card">
+                <h3>📈 User Growth</h3>
+                <p>Shows students and instructors growth trends.</p>
+            </div>
+
+            <div class="analytics-card">
+                <h3>🔥 Top Performing Courses</h3>
+                <p>Most enrolled and highest-rated courses.</p>
+            </div>
+
+            <div class="analytics-card">
+                <h3>💰 Revenue Overview</h3>
+                <p>Track earnings and subscription activity.</p>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+function logout() {
+    localStorage.clear();
+    alert("Logged out successfully!");
+    window.location.href = "login.html";
+}
+</script>
+
+<script>
+const toggle = document.getElementById("themeToggle");
+
+toggle.addEventListener("click", () => {
+    const current = document.documentElement.getAttribute("data-theme");
+
+    if (current === "dark") {
+        document.documentElement.removeAttribute("data-theme");
+    } else {
+        document.documentElement.setAttribute("data-theme", "dark");
+    }
+});
+
+</script>
+
+
+</body>
+</html>
