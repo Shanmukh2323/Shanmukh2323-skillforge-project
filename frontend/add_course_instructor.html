@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Course - Instructor</title>
+    <link rel="stylesheet" href="add_course_instructor.css">
+</head>
+<body>
+
+<script>
+if (!localStorage.getItem("token") || localStorage.getItem("role") !== "instructor") {
+    window.location.href = "login.html";
+}
+</script>
+
+<div class="container">
+    <h2>Add New Course</h2>
+
+    <form id="courseForm">
+
+        <label>Course Title</label>
+        <input type="text" id="title" placeholder="Python Basics" required>
+
+        <label>Course Description</label>
+        <textarea id="description" placeholder="Explain what students will learn in this course..." required></textarea>
+
+        <label>Category</label>
+        <input type="text" id="category" placeholder="Programming / AI / Web">
+
+        <label>Level</label>
+        <select id="level">
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+        </select>
+
+        <label>Image URL</label>
+        <input type="text" id="image" placeholder="https://via.placeholder.com/300">
+
+        <button type="submit">Create Course</button>
+    </form>
+</div>
+
+<script>
+document.getElementById("courseForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const courseData = {
+        title: document.getElementById("title").value,
+        description: document.getElementById("description").value,
+        category: document.getElementById("category").value,
+        level: document.getElementById("level").value,
+        image: document.getElementById("image").value
+    };
+
+    try {
+        const res = await fetch("http://localhost:8080/instructor/courses/add", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            },
+            body: JSON.stringify(courseData)
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            alert("Course added successfully!");
+            window.location.href = "instructor_courses.html";
+        } else {
+            alert(data.message || "Failed to add course");
+        }
+    } catch (err) {
+        alert("Backend not reachable");
+        console.error(err);
+    }
+});
+</script>
+
+</body>
+</html>

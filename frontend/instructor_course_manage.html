@@ -2,22 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Course - Instructor</title>
+    <title>Manage Course - SkillForge</title>
     <link rel="stylesheet" href="instructor_course_manage.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
 <script>
-// PROTECT ROUTE
+/* ================= AUTH + COURSE CHECK ================= */
 if (!localStorage.getItem("token") || localStorage.getItem("role") !== "instructor") {
     window.location.href = "login.html";
 }
 
-// Get selected course
+const token = localStorage.getItem("token");
 const courseId = localStorage.getItem("selectedCourse");
+
 if (!courseId) {
     alert("No course selected!");
     window.location.href = "instructor_courses.html";
@@ -26,145 +25,157 @@ if (!courseId) {
 
 <div class="app">
 
-    <!-- SIDEBAR -->
+    <!-- ================= SIDEBAR ================= -->
     <aside class="sidebar">
         <h2 class="logo">SkillForge</h2>
-
         <nav class="menu">
             <a href="instructor_dashboard.html">🏠 Dashboard</a>
             <a href="instructor_courses.html" class="active">📚 My Courses</a>
-            <a href="add_course_instructor.html">➕ Add New Course</a>
-            <a href="instructor_students.html">👥 Manage Students</a>
+            <a href="add_course_instructor.html">➕ Add Course</a>
             <a href="instructor_assignments.html">📝 Assignments</a>
-            <a href="instructor_quizzes.html">❓ Quizzes</a>
-            <a href="instructor_results.html">📈 Results</a>
-            <a href="instructor_analytics.html">📊 Analytics</a>
             <a href="#" onclick="logout()">🚪 Logout</a>
         </nav>
     </aside>
 
-    <!-- MAIN -->
+    <!-- ================= MAIN ================= -->
     <main class="main">
 
         <!-- TOPBAR -->
         <header class="topbar">
-            <h2 class="title" id="courseTitle">Course Title</h2>
-
-            <div class="top-right">
-                <input type="text" class="search" placeholder="Search student...">
-                <span class="icon-btn">🔔</span>
-                <span class="icon-btn">✉️</span>
-                <span class="icon-btn" id="themeToggle">🌗</span>
-                <div class="profile">I</div>
-            </div>
+            <h2 id="courseTitle">Course</h2>
         </header>
 
         <!-- TABS -->
         <div class="tabs">
             <button class="tab-btn active" onclick="showTab('studentsTab')">👥 Students</button>
+            <button class="tab-btn" onclick="showTab('videosTab')">🎥 Videos</button>
             <button class="tab-btn" onclick="showTab('assignmentsTab')">📝 Assignments</button>
-            <button class="tab-btn" onclick="showTab('quizzesTab')">❓ Quizzes</button>
             <button class="tab-btn" onclick="showTab('analyticsTab')">📊 Analytics</button>
         </div>
 
-        <!-- TAB CONTENT SECTIONS -->
+        <!-- ================= STUDENTS TAB ================= -->
         <section id="studentsTab" class="tab-section active">
             <h3>Enrolled Students</h3>
-            <button class="add-btn" onclick="openAddStudentPopup()">➕ Add Student</button>
-
+            <button class="add-btn" onclick="openStudentPopup()">➕ Add Student</button>
             <div id="studentList" class="list"></div>
         </section>
 
+        <!-- ================= VIDEOS TAB ================= -->
+        <section id="videosTab" class="tab-section">
+            <h3>🎥 Course Videos</h3>
+
+            <div class="video-form">
+                <input id="videoTitle" placeholder="Video Title">
+                <input id="videoURL" placeholder="YouTube Video URL">
+                <input id="videoDuration" placeholder="Duration (eg: 10:30)">
+                <button class="add-btn" onclick="addVideo()">➕ Add Video</button>
+            </div>
+
+            <div id="videoList" class="list"></div>
+        </section>
+
+        <!-- ================= ASSIGNMENTS TAB ================= -->
         <section id="assignmentsTab" class="tab-section">
             <h3>Assignments</h3>
-            <button class="add-btn">➕ Add Assignment</button>
-
-            <div id="assignmentList" class="list"></div>
+            <p>Use the Assignments page to create & manage assignments.</p>
         </section>
 
-        <section id="quizzesTab" class="tab-section">
-            <h3>Quizzes</h3>
-            <button class="add-btn">➕ Add Quiz</button>
-
-            <div id="quizList" class="list"></div>
-        </section>
-
+        <!-- ================= ANALYTICS TAB ================= -->
         <section id="analyticsTab" class="tab-section">
             <h3>Analytics</h3>
-            <p>Graphs and AI insights will appear here.</p>
+            <p>AI insights & progress (coming soon).</p>
         </section>
 
     </main>
 </div>
 
-<!-- ADD STUDENT POPUP -->
-<div id="addStudentPopup" class="popup">
+<!-- ================= ADD STUDENT POPUP ================= -->
+<div id="studentPopup" class="popup">
     <div class="popup-box">
         <h3>Add Student</h3>
-        <input id="studentName" type="text" placeholder="Student Name">
-        <input id="studentEmail" type="email" placeholder="Student Email">
+        <input id="studentName" placeholder="Student Name">
+        <input id="studentEmail" placeholder="Student Email">
         <button onclick="addStudent()">Add</button>
-        <button class="close-btn" onclick="closeAddStudentPopup()">Cancel</button>
+        <button class="close-btn" onclick="closeStudentPopup()">Cancel</button>
     </div>
 </div>
 
 <script>
-// THEME TOGGLE
-document.getElementById("themeToggle").addEventListener("click", () => {
-    const current = document.documentElement.getAttribute("data-theme");
-    if (current) document.documentElement.removeAttribute("data-theme");
-    else document.documentElement.setAttribute("data-theme", "dark");
-});
+/* ================= TAB SWITCH ================= */
+function showTab(tabId) {
+    document.querySelectorAll(".tab-section").forEach(s =>
+        s.classList.remove("active")
+    );
+    document.querySelectorAll(".tab-btn").forEach(b =>
+        b.classList.remove("active")
+    );
 
-// LOGOUT
+    document.getElementById(tabId).classList.add("active");
+    event.target.classList.add("active");
+}
+
+/* ================= LOGOUT ================= */
 function logout() {
     localStorage.clear();
     window.location.href = "login.html";
 }
 
-// SWITCH TABS
-function showTab(tabId) {
-    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-    document.querySelectorAll(".tab-section").forEach(sec => sec.classList.remove("active"));
+/* ================= YOUTUBE EMBED FIX ================= */
+function toEmbedURL(url) {
+    if (!url) return "";
 
-    event.target.classList.add("active");
-    document.getElementById(tabId).classList.add("active");
+    if (url.includes("embed")) return url;
+
+    if (url.includes("youtu.be")) {
+        return "https://www.youtube.com/embed/" +
+               url.split("youtu.be/")[1].split("?")[0];
+    }
+
+    if (url.includes("youtube.com/watch")) {
+        return "https://www.youtube.com/embed/" +
+               new URL(url).searchParams.get("v");
+    }
+
+    return url;
 }
 
-// LOAD COURSE INFO
+/* ================= LOAD COURSE TITLE ================= */
 async function loadCourse() {
-    const res = await fetch(`http://localhost:8080/instructor/courses`, {
-        headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+    const res = await fetch("http://localhost:8080/instructor/courses", {
+        headers: { Authorization: `Bearer ${token}` }
     });
-
-    const data = await res.json();
-    const course = data.find(c => c.id == courseId);
-
-    document.getElementById("courseTitle").textContent = course.title;
+    const courses = await res.json();
+    const course = courses.find(c => c.id == courseId);
+    document.getElementById("courseTitle").innerText = course.title;
 }
 
-// LOAD STUDENTS
+/* ================= STUDENTS ================= */
 async function loadStudents() {
     const res = await fetch(`http://localhost:8080/instructor/course/${courseId}/students`, {
-        headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+        headers: { Authorization: `Bearer ${token}` }
     });
-
     const students = await res.json();
+
     const list = document.getElementById("studentList");
     list.innerHTML = "";
 
     students.forEach(s => {
         list.innerHTML += `
             <div class="item">
-                <h4>${s.name}</h4>
+                <strong>${s.name}</strong>
                 <p>${s.email}</p>
-                <p>Progress: ${s.progress || 0}%</p>
             </div>
         `;
     });
 }
 
-// ADD STUDENT
+function openStudentPopup() {
+    document.getElementById("studentPopup").style.display = "flex";
+}
+function closeStudentPopup() {
+    document.getElementById("studentPopup").style.display = "none";
+}
+
 async function addStudent() {
     const name = document.getElementById("studentName").value;
     const email = document.getElementById("studentEmail").value;
@@ -172,7 +183,7 @@ async function addStudent() {
     const res = await fetch(`http://localhost:8080/instructor/course/${courseId}/add-student`, {
         method: "POST",
         headers: {
-            "Authorization": "Bearer " + localStorage.getItem("token"),
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json"
         },
         body: JSON.stringify({ name, email })
@@ -180,22 +191,66 @@ async function addStudent() {
 
     const data = await res.json();
     alert(data.message);
-
-    closeAddStudentPopup();
+    closeStudentPopup();
     loadStudents();
 }
 
-function openAddStudentPopup() {
-    document.getElementById("addStudentPopup").style.display = "flex";
+/* ================= VIDEOS ================= */
+async function loadVideos() {
+    const res = await fetch(`http://localhost:8080/instructor/course/${courseId}/videos`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    const videos = await res.json();
+
+    const list = document.getElementById("videoList");
+    list.innerHTML = "";
+
+    videos.forEach(v => {
+        list.innerHTML += `
+            <div class="item">
+                <strong>${v.title}</strong>
+                <p>Duration: ${v.duration || "N/A"}</p>
+                <iframe
+                    width="100%"
+                    height="200"
+                    src="${toEmbedURL(v.video_url)}"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        `;
+    });
 }
 
-function closeAddStudentPopup() {
-    document.getElementById("addStudentPopup").style.display = "none";
+async function addVideo() {
+    const title = document.getElementById("videoTitle").value;
+    const url = document.getElementById("videoURL").value;
+    const duration = document.getElementById("videoDuration").value;
+
+    const res = await fetch(`http://localhost:8080/instructor/course/${courseId}/videos/add`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ title, video_url: url, duration })
+    });
+
+    const data = await res.json();
+    alert(data.message);
+
+    document.getElementById("videoTitle").value = "";
+    document.getElementById("videoURL").value = "";
+    document.getElementById("videoDuration").value = "";
+
+    loadVideos();
 }
 
-// INITIAL LOAD
+/* ================= INIT ================= */
 loadCourse();
 loadStudents();
+loadVideos();
 </script>
 
 </body>

@@ -115,7 +115,7 @@ if (!localStorage.getItem("token") || localStorage.getItem("role") !== "admin") 
             <p class="menu-title">User Management</p>
             <a href="#">👥 All Users</a>
             <a href="#">👤 Students</a>
-            <a href="#">👨‍🏫 Instructors</a>
+            <a href="admin_instructors.html">👨‍🏫 Instructors</a>
 
             <p class="menu-title">Course Management</p>
             <a href="manage_courses.html">📚 All Courses</a>
@@ -153,7 +153,10 @@ if (!localStorage.getItem("token") || localStorage.getItem("role") !== "admin") 
 
                 <textarea id="description" placeholder="Course Description" rows="4" required></textarea>
 
-                <input type="number" id="instructor_id" placeholder="Instructor ID" required>
+                <select id="instructor_id" required>
+    <option value="">Select Instructor</option>
+</select>
+
 
                 <input type="text" id="category" placeholder="Category (e.g., Python, AI, Java)" required>
 
@@ -280,6 +283,29 @@ async function deleteCourse(id) {
 
     loadCourses();
 }
+
+async function loadInstructors() {
+    const res = await fetch("http://localhost:8080/admin/instructors", {
+        headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+        }
+    });
+
+    const instructors = await res.json();
+    const select = document.getElementById("instructor_id");
+
+    instructors.forEach(i => {
+        select.innerHTML += `
+            <option value="${i.id}">
+                ${i.name} (${i.email})
+            </option>
+        `;
+    });
+}
+
+
+loadInstructors();
+
 
 loadCourses();
 </script>

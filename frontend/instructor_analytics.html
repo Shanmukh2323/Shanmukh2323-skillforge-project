@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Instructor Analytics - SkillForge</title>
+<link rel="stylesheet" href="instructor_analytics.css">
+</head>
+
+<body>
+
+<script>
+if (!localStorage.getItem("token") || localStorage.getItem("role") !== "instructor") {
+    window.location.href = "login.html";
+}
+</script>
+
+<div class="analytics-container">
+    <h2 class="analytics-title">📊 Student Quiz Analytics</h2>
+    <p class="analytics-subtitle">
+        Track student performance and identify learning gaps.
+    </p>
+
+    <table class="analytics-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Student</th>
+                <th>Attempts</th>
+                <th>Average Score</th>
+                <th>Best Score</th>
+                <th>Weak Areas</th>
+            </tr>
+        </thead>
+        <tbody id="analyticsBody"></tbody>
+    </table>
+
+    <h2 style="margin-top:60px;">📘 Assignment Performance</h2>
+
+<table class="analytics-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Student</th>
+            <th>Submissions</th>
+            <th>Average Score</th>
+            <th>Best Score</th>
+        </tr>
+    </thead>
+    <tbody id="assignmentAnalyticsBody"></tbody>
+</table>
+
+</div>
+
+<script src="js/instructor_analytics.js"></script>
+
+</body>
+</html>

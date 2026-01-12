@@ -530,3 +530,345 @@ body {
     text-decoration: none;
 }
 
+/* ================= AI CHATBOT ================= */
+.ai-chatbot {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 320px;
+    background: #020617;
+    border: 1px solid #1e293b;
+    border-radius: 14px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    font-family: 'Inter', sans-serif;
+    z-index: 9999;
+}
+
+/* Header */
+.ai-header {
+    background: #2563eb;
+    padding: 12px;
+    border-radius: 14px 14px 0 0;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Body */
+.ai-body {
+    display: none;
+    flex-direction: column;
+    height: 380px;
+}
+
+/* Messages */
+#chatBox {
+    flex: 1;
+    padding: 12px;
+    overflow-y: auto;
+    font-size: 14px;
+}
+
+.user {
+    color: #22c55e;
+    margin-bottom: 8px;
+}
+
+.bot {
+    color: #60a5fa;
+    margin-bottom: 12px;
+}
+
+/* Input */
+.ai-input {
+    display: flex;
+    border-top: 1px solid #1e293b;
+}
+
+.ai-input input {
+    flex: 1;
+    padding: 10px;
+    background: #020617;
+    border: none;
+    color: white;
+    outline: none;
+}
+
+.ai-input button {
+    padding: 0 16px;
+    background: #2563eb;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+
+/* ===============================
+   🤖 SKILLFORGE AI CHATBOT
+================================ */
+
+/* Floating Button */
+#ai-chat-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2563eb, #1abd9c);
+    color: #ffffff;
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+    z-index: 9999;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#ai-chat-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+}
+
+/* Chat Box */
+#ai-chat-box {
+    position: fixed;
+    bottom: 95px;
+    right: 25px;
+    width: 330px;
+    background: #020617;
+    border-radius: 14px;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    overflow: hidden;
+}
+
+/* Header */
+#ai-chat-header {
+    background: linear-gradient(135deg, #2563eb, #1abd9c);
+    padding: 12px 14px;
+    color: #ffffff;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#ai-chat-header button {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* Messages */
+#ai-chat-messages {
+    flex: 1;
+    padding: 12px;
+    overflow-y: auto;
+    font-size: 14px;
+}
+
+/* User & Bot Messages */
+.ai-user {
+    margin-bottom: 8px;
+    color: #22c55e;
+}
+
+.ai-bot {
+    margin-bottom: 12px;
+    color: #60a5fa;
+}
+
+/* Input Area */
+#ai-chat-input {
+    display: flex;
+    border-top: 1px solid #1e293b;
+}
+
+#ai-chat-input input {
+    flex: 1;
+    padding: 10px;
+    background: #020617;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+#ai-chat-input button {
+    padding: 0 16px;
+    background: #2563eb;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+#ai-chat-input button:hover {
+    background: #1e40af;
+}
+
+
+/* ==========================
+   AI QUIZ PAGE UX
+========================== */
+
+.quiz-container {
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 20px;
+}
+
+.quiz-title {
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.quiz-subtitle {
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.quiz-box > div {
+    background: white;
+    padding: 20px 24px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+}
+
+.quiz-box p {
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.quiz-box label {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.quiz-box label:hover {
+    background: #eef5ff;
+}
+
+.quiz-box input {
+    margin-right: 10px;
+}
+
+.submit-btn {
+    margin-top: 20px;
+    padding: 14px 30px;
+    background: #1abd9c;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background: #148f77;
+}
+
+/* Feedback Box */
+.feedback-box {
+    margin-top: 40px;
+    padding: 25px;
+    background: #f8fafc;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+
+/* ==========================
+   QUIZ HISTORY UX
+========================== */
+
+.history-container {
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 20px;
+}
+
+.history-title {
+    font-size: 34px;
+    font-weight: 700;
+}
+
+.history-subtitle {
+    margin-bottom: 30px;
+    color: #555;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.history-card {
+    background: white;
+    padding: 20px 24px;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-score {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1abd9c;
+}
+
+.history-weak {
+    color: #ef4444;
+    font-size: 14px;
+}
+
+.history-date {
+    font-size: 13px;
+    color: #777;
+}
+
+/* ==========================
+   QUIZ ANSWER HIGHLIGHTING
+========================== */
+
+.option-label {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    border: 2px solid transparent;
+}
+
+.option-label.correct {
+    background: #dcfce7;          /* light green */
+    border-color: #22c55e;
+    color: #065f46;
+    font-weight: 600;
+}
+
+.option-label.wrong {
+    background: #fee2e2;          /* light red */
+    border-color: #ef4444;
+    color: #7f1d1d;
+    font-weight: 600;
+}
+
+

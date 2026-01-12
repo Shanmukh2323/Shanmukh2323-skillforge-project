@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Instructor Management</title>
+<link rel="stylesheet" href="admin_dashboard.css">
+</head>
+
+<body>
+
+<script>
+if (localStorage.getItem("role") !== "admin") {
+    window.location.href = "login.html";
+}
+</script>
+
+<div class="app">
+
+<aside class="sidebar">
+    <h2 class="logo">SkillForge</h2>
+    <nav class="menu">
+        <a href="admin_dashboard.html">🏠 Dashboard</a>
+        <a href="admin_users.html">👥 All Users</a>
+        <a href="admin_instructors.html" class="active">👨‍🏫 Instructors</a>
+        <a href="add_course.html">📚 Courses</a>
+        <a onclick="logout()">🚪 Logout</a>
+    </nav>
+</aside>
+
+<main class="main">
+
+<div class="page-header instructor-header">
+    <div>
+        <h2>👨‍🏫 Instructor Management</h2>
+        <p class="muted-text">Manage instructors and their assigned courses</p>
+    </div>
+
+    <button class="btn btn-primary" onclick="openInstructorModal()">
+        ➕ Add Instructor
+    </button>
+</div>
+
+
+
+<table class="analytics-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Courses Assigned</th>
+        </tr>
+    </thead>
+    <tbody id="instructorTable"></tbody>
+</table>
+
+</main>
+</div>
+
+<!-- ADD INSTRUCTOR MODAL -->
+<div class="modal" id="instructorModal">
+    <div class="modal-content">
+        <h3>Add Instructor</h3>
+        <input id="iname" placeholder="Name">
+        <input id="iemail" placeholder="Email">
+        <input id="ipassword" placeholder="Password">
+        <button onclick="addInstructor()">Add</button>
+        <button onclick="closeInstructorModal()">Cancel</button>
+    </div>
+</div>
+
+<script src="js/admin_instructors.js"></script>
+</body>
+</html>

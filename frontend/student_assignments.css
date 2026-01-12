@@ -1,0 +1,26 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    padding: 20px;
+}
+
+.assignment-card {
+    background: white;
+    padding: 16px;
+    margin-bottom: 14px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.assignment-card h3 {
+    margin: 0 0 8px;
+}
+
+button {
+    padding: 8px 14px;
+    background: #0b2c4f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}

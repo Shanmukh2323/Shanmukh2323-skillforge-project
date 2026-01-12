@@ -1,0 +1,54 @@
+body {
+    margin: 0;
+    font-family: monospace;
+    background: #0f172a;
+    color: #e5e7eb;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.problem {
+    width: 40%;
+    padding: 20px;
+    background: #020617;
+    overflow-y: auto;
+}
+
+.editor {
+    width: 60%;
+    padding: 20px;
+    background: #020617;
+}
+
+textarea {
+    width: 100%;
+    height: 60%;
+    background: #020617;
+    color: #22c55e;
+    border: 1px solid #334155;
+    padding: 12px;
+    font-size: 14px;
+}
+
+button {
+    margin-top: 12px;
+    padding: 10px 18px;
+    background: #2563eb;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+pre {
+    background: #020617;
+    padding: 10px;
+    border: 1px solid #334155;
+}
+
+#result {
+    margin-top: 15px;
+}
+

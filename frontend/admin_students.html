@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student Management</title>
+<link rel="stylesheet" href="admin_dashboard.css">
+</head>
+
+<body>
+
+<script>
+if (localStorage.getItem("role") !== "admin") {
+    window.location.href = "login.html";
+}
+</script>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <h2 class="logo">SkillForge</h2>
+    <nav class="menu">
+        <a href="admin_dashboard.html">🏠 Dashboard</a>
+        <a href="admin_users.html">👥 All Users</a>
+        <a href="admin_students.html" class="active">👤 Students</a>
+        <a href="admin_instructors.html">👨‍🏫 Instructors</a>
+        <a href="add_course.html">📚 Courses</a>
+        <a onclick="logout()">🚪 Logout</a>
+    </nav>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+<div class="page-header">
+    <h2>👤 Student Management</h2>
+    <button class="btn btn-primary" onclick="openStudentModal()">
+        ➕ Add Student
+    </button>
+</div>
+
+<table class="analytics-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Assignment Submissions</th>
+            <th>Assignment Avg</th>
+            <th>Quiz Avg</th>
+        </tr>
+    </thead>
+    <tbody id="studentsTableBody"></tbody>
+</table>
+
+</main>
+</div>
+
+<!-- ADD STUDENT MODAL -->
+<div class="modal" id="studentModal">
+    <div class="modal-content">
+        <h3>Add Student</h3>
+        <input id="sname" placeholder="Student Name">
+        <input id="semail" placeholder="Email">
+        <input id="spassword" placeholder="Password">
+
+        <button class="btn btn-primary" onclick="addStudent()">Add</button>
+        <button class="btn" onclick="closeStudentModal()">Cancel</button>
+    </div>
+</div>
+
+<script src="js/admin_students.js"></script>
+</body>
+</html>

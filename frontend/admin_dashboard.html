@@ -29,8 +29,8 @@
             <a href="#" class="active">🏠 Dashboard</a>
             <p class="menu-title">User Management</p>
             <a href="#">👥 All Users</a>
-            <a href="#">👤 Students</a>
-            <a href="#">👨‍🏫 Instructors</a>
+            <a href="admin_students.html">👤 Students</a>
+            <a href="admin_instructors.html">👨‍🏫 Instructors</a>
 
             <p class="menu-title">Course Management</p>
             <a href="add_course.html">📚 All Courses</a>
@@ -72,17 +72,17 @@
 
             <div class="card">
                 <h3>👥 Total Students</h3>
-                <h1 class="big-number">1,240</h1>
+                <h1 class="big-number" id="studentCount">0</h1>
             </div>
 
             <div class="card">
                 <h3>👨‍🏫 Total Instructors</h3>
-                <h1 class="big-number">42</h1>
+                <h1 class="big-number" id="instructorCount">0</h1>
             </div>
 
             <div class="card">
                 <h3>📚 Total Courses</h3>
-                <h1 class="big-number">87</h1>
+                <h1 class="big-number" id="courseCount">0</h1>
             </div>
 
             <div class="card">
@@ -112,6 +112,8 @@
             </div>
         </div>
 
+</button>
+
     </main>
 </div>
 
@@ -137,6 +139,33 @@ toggle.addEventListener("click", () => {
 });
 
 </script>
+
+<!-- ✅ ADD INSTRUCTOR MODAL SCRIPT (ADD HERE) -->
+    <script>
+    function openInstructorModal() {
+        document.getElementById("instructorModal").style.display = "flex";
+    }
+
+    function closeInstructorModal() {
+        document.getElementById("instructorModal").style.display = "none";
+    }
+
+    </script>
+
+<script>
+fetch("http://localhost:8080/admin/dashboard-stats", {
+    headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
+    }
+})
+.then(res => res.json())
+.then(data => {
+    document.getElementById("studentCount").innerText = data.students;
+    document.getElementById("instructorCount").innerText = data.instructors;
+    document.getElementById("courseCount").innerText = data.courses;
+});
+</script>
+
 
 
 </body>

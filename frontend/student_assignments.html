@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assignments - Student</title>
+    <link rel="stylesheet" href="student_assignments.css">
+</head>
+<body>
+
+<script>
+if (!localStorage.getItem("token") || localStorage.getItem("role") !== "student") {
+    window.location.href = "login.html";
+}
+
+const courseId = localStorage.getItem("selectedCourse");
+if (!courseId) {
+    alert("Please select a course first");
+    window.location.href = "MyCourses.html";
+}
+</script>
+
+<h2>📝 Assignments</h2>
+
+<div id="assignmentList"></div>
+
+<script src="student_assignments.js"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Quiz - SkillForge</title>
+<link rel="stylesheet" href="styles.css"> <!-- use main style.css -->
+</head>
+
+<body>
+
+<script>
+if (!localStorage.getItem("token") || localStorage.getItem("role") !== "student") {
+    window.location.href = "login.html";
+}
+</script>
+
+<div class="quiz-container">
+
+    <h2 class="quiz-title">🧠 AI Quiz</h2>
+    <p class="quiz-subtitle">
+        Answer the questions below. AI will analyze your weak areas and help you improve.
+    </p>
+
+    <div id="quiz" class="quiz-box"></div>
+
+    <button class="submit-btn" onclick="submitQuiz()">
+        Submit Quiz
+    </button>
+
+    <div id="feedback" class="feedback-box"></div>
+
+</div>
+
+<script src="js/student_quiz.js"></script>
+</body>
+</html>

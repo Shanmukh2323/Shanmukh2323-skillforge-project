@@ -1,0 +1,41 @@
+body {
+    margin: 0;
+    font-family: Inter, sans-serif;
+    background: #f5f7fb;
+}
+
+.topbar {
+    background: #0b2c4f;
+    color: white;
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.course-info {
+    padding: 20px 30px;
+    background: white;
+}
+
+.assignments {
+    padding: 20px 30px;
+}
+
+.assignment-card {
+    background: white;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.assignment-card button {
+    margin-top: 10px;
+    padding: 8px 14px;
+    border: none;
+    background: #0b2c4f;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}

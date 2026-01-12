@@ -78,12 +78,15 @@ async function loadCourses() {
     const container = document.getElementById("courseList");
 
     const res = await fetch("http://localhost:8080/instructor/courses", {
-        headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
     });
 
     const courses = await res.json();
+    console.log("Courses:", courses); // DEBUG
 
-    if (courses.length === 0) {
+    if (!Array.isArray(courses) || courses.length === 0) {
         container.innerHTML = "<p class='empty'>You have not created any courses yet.</p>";
         return;
     }
@@ -96,13 +99,11 @@ async function loadCourses() {
 
         card.innerHTML = `
             <img src="${course.image || 'https://via.placeholder.com/300'}" class="course-img" />
-
             <div class="course-info">
                 <h3>${course.title}</h3>
                 <p>${course.category || "Uncategorized"}</p>
                 <p class="desc">${course.description.substring(0, 80)}...</p>
             </div>
-
             <div class="course-actions">
                 <button onclick="manageCourse(${course.id})">Manage</button>
             </div>
@@ -112,12 +113,14 @@ async function loadCourses() {
     });
 }
 
-function manageCourse(id) {
-    // Save selected course
-    localStorage.setItem("selectedCourse", id);
+// ---------------- MANAGE COURSE ----------------
+function manageCourse(courseId) {
+    console.log("Selected Course ID:", courseId);
+    localStorage.setItem("selectedCourse", courseId);
     window.location.href = "instructor_course_manage.html";
 }
 
+// INIT
 loadCourses();
 </script>
 

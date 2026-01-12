@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Assignment</title>
+<link rel="stylesheet" href="student_assignment_view.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- PROBLEM -->
+    <div class="problem">
+        <h2 id="title">Loading...</h2>
+        <p id="description"></p>
+
+        <h4>Example Test Cases</h4>
+        <pre id="testCases"></pre>
+    </div>
+
+    <!-- CODE EDITOR -->
+    <div class="editor">
+    <h4>Write your code</h4>
+
+    <!-- ✅ Language Selector -->
+    <label for="language"><strong>Language:</strong></label>
+    <select id="language">
+        <option value="js">JavaScript</option>
+        <option value="python">Python</option>
+    </select>
+
+    <br><br>
+
+    <textarea id="codeEditor"></textarea>
+
+    <br>
+
+    <button onclick="runCode()">▶ Run Code</button>
+    <button onclick="submitAssignment()">🚀 Submit</button>
+
+    <div id="result"></div>
+
+    <table id="testResultTable">
+        <thead>
+            <tr>
+                <th>Input</th>
+                <th>Expected</th>
+                <th>Your Output</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+
+</div>
+
+<script src="student_assignment_view.js"></script>
+</body>
+</html>

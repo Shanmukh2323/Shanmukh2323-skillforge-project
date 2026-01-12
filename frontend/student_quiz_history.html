@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Quiz History - SkillForge</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<script>
+if (!localStorage.getItem("token") || localStorage.getItem("role") !== "student") {
+    window.location.href = "login.html";
+}
+</script>
+
+<div class="history-container">
+
+    <h2 class="history-title">📜 Quiz History</h2>
+    <p class="history-subtitle">
+        Review your past quiz attempts and track your progress.
+    </p>
+
+    <div id="history" class="history-list"></div>
+
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+
+fetch("http://localhost:8080/student/quiz-history", {
+    headers: { Authorization: `Bearer ${token}` }
+})
+.then(res => res.json())
+.then(data => {
+    const div = document.getElementById("history");
+
+    if (data.length === 0) {
+        div.innerHTML = "<p>No quiz attempts yet.</p>";
+        return;
+    }
+
+    data.forEach(q => {
+        div.innerHTML += `
+            <div class="history-card">
+                <div>
+                    <div class="history-score">${q.score}%</div>
+                    <div class="history-weak">
+                        Weak Areas: ${q.weak_areas || "None"}
+                    </div>
+                </div>
+                <div class="history-date">
+                    ${new Date(q.created_at).toLocaleString()}
+                </div>
+            </div>
+        `;
+    });
+});
+</script>
+
+</body>
+</html>

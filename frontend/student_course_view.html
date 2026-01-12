@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Course Learning - SkillForge</title>
+    <link rel="stylesheet" href="student_course_view.css">
+</head>
+<body>
+
+<header class="topbar">
+    <h2 id="courseTitle">Course</h2>
+    <button onclick="goBack()">⬅ Back</button>
+</header>
+
+<section class="course-info">
+    <p id="courseDescription">Loading...</p>
+</section>
+
+<section class="videos">
+    <h3>🎥 Course Videos</h3>
+    <div id="videoList"></div>
+</section>
+
+<script>
+/* =================================================
+   YOUTUBE URL → EMBED URL FIX (IMPORTANT)
+================================================= */
+function toEmbedURL(url) {
+    if (!url) return "";
+
+    // Already embed link
+    if (url.includes("embed")) return url;
+
+    // youtu.be short link
+    if (url.includes("youtu.be")) {
+        return "https://www.youtube.com/embed/" +
+               url.split("youtu.be/")[1].split("?")[0];
+    }
+
+    // youtube.com/watch?v=xxxx
+    if (url.includes("youtube.com/watch")) {
+        return "https://www.youtube.com/embed/" +
+               new URL(url).searchParams.get("v");
+    }
+
+    return url;
+}
+
+/* =================================================
+   AUTH + COURSE
+================================================= */
+const token = localStorage.getItem("token");
+const courseId = localStorage.getItem("selectedCourse");
+
+if (!token || !courseId) {
+    window.location.href = "MyCourses.html";
+}
+
+/* =================================================
+   COURSE DETAILS
+================================================= */
+fetch(`http://localhost:8080/student/course/${courseId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+})
+.then(res => res.json())
+.then(course => {
+    document.getElementById("courseTitle").innerText = course.title;
+    document.getElementById("courseDescription").innerText = course.description;
+});
+
+/* =================================================
+   COURSE VIDEOS
+================================================= */
+fetch(`http://localhost:8080/student/course/${courseId}/videos`, {
+    headers: { Authorization: `Bearer ${token}` }
+})
+.then(res => res.json())
+.then(videos => {
+    const list = document.getElementById("videoList");
+    list.innerHTML = "";
+
+    if (!videos || videos.length === 0) {
+        list.innerHTML = "<p>No videos uploaded yet.</p>";
+        return;
+    }
+
+    videos.forEach(v => {
+        list.innerHTML += `
+            <div class="video-card">
+                <h4>${v.title}</h4>
+                <p>Duration: ${v.duration || "N/A"}</p>
+
+                <iframe
+                    width="100%"
+                    height="220"
+                    src="${toEmbedURL(v.video_url)}"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        `;
+    });
+});
+
+/* =================================================
+   BACK
+================================================= */
+function goBack() {
+    window.location.href = "MyCourses.html";
+}
+</script>
+
+</body>
+</html>

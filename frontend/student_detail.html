@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Performance - SkillForge</title>
+
+    <!-- Shared Analytics CSS -->
+    <link rel="stylesheet" href="instructor_analytics.css">
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<!-- 🔐 Protect Instructor Route -->
+<script>
+if (!localStorage.getItem("token") || localStorage.getItem("role") !== "instructor") {
+    window.location.href = "login.html";
+}
+</script>
+
+<div class="analytics-container">
+
+    <!-- ===============================
+         PAGE TITLE
+    =============================== -->
+    <h2 class="analytics-title">📘 Student Performance</h2>
+    <p class="analytics-subtitle">
+        Detailed view of quiz and assignment attempts with performance insights.
+    </p>
+
+    <!-- ===============================
+         🧠 QUIZ ATTEMPTS TABLE
+    =============================== -->
+    <h3>🧠 Quiz Attempts</h3>
+    <table class="analytics-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Score</th>
+                <th>Weak Areas</th>
+            </tr>
+        </thead>
+        <tbody id="quizAttemptsBody"></tbody>
+    </table>
+
+    <!-- ===============================
+         📘 ASSIGNMENT ATTEMPTS TABLE
+    =============================== -->
+    <h3 style="margin-top:40px;">📘 Assignment Attempts</h3>
+    <table class="analytics-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Score</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="assignmentAttemptsBody"></tbody>
+    </table>
+
+    <!-- ===============================
+         📈 QUIZ SCORE TREND CHART
+    =============================== -->
+    <h3 style="margin-top:50px;">📈 Quiz Score Trend</h3>
+    <canvas id="quizScoreChart" height="120"></canvas>
+
+    <!-- ===============================
+         📊 WEAK AREAS CHART
+    =============================== -->
+    <h3 style="margin-top:50px;">📊 Topic-wise Weak Areas</h3>
+    <canvas id="weakAreasChart" height="120"></canvas>
+
+</div>
+
+<!-- Student Detail Logic -->
+<script src="js/student_detail.js"></script>
+
+</body>
+</html>

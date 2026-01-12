@@ -13,7 +13,7 @@
 <header class="navbar">
     <div class="logo">SkillForge</div>
     <nav class="nav-links">
-        <a href="#">Courses</a>
+        <a href="login.html">Courses</a>
         <a href="#">Features</a>
         <a href="#">Pricing</a>
         <a href="login.html">Sign In</a>
@@ -140,6 +140,41 @@
         <a href="#">Terms</a>
     </div>
 </footer>
+
+<!-- ===============================
+ 🤖 SKILLFORGE AI CHATBOT
+================================ -->
+
+<div class="ai-chatbot">
+
+    <!-- Header (toggle) -->
+    <div class="ai-header" onclick="toggleAIChat()">
+        🤖 SkillForge AI
+    </div>
+
+    <!-- Chat Body -->
+    <div class="ai-body" id="ai-chat-box">
+
+        <!-- Messages -->
+        <div id="ai-chat-messages"></div>
+
+        <!-- Input -->
+        <div class="ai-input">
+            <input
+                type="text"
+                id="aiInput"
+                placeholder="Ask about SkillForge..."
+                onkeydown="if(event.key==='Enter') sendAIMessage()"
+            />
+            <button onclick="sendAIMessage()">Send</button>
+        </div>
+
+    </div>
+</div>
+
+<!-- AI Chatbot Script -->
+<script src="js/ai_chatbot.js"></script>
+
 
 </body>
 </html>

@@ -1,5 +1,15 @@
 const express = require("express");
+const bcrypt = require("bcryptjs");
 const router = express.Router();
+
+console.log("🔥 INSTRUCTOR ROUTES FILE LOADED 🔥");
+
+/* =====================================================
+   HEALTH CHECK
+===================================================== */
+router.post("/ping", (req, res) => {
+    res.json({ message: "Instructor router is working" });
+});
 
 /* =====================================================
    INSTRUCTOR DASHBOARD
@@ -12,15 +22,17 @@ router.get("/dashboard", (req, res) => {
         "SELECT COUNT(*) AS total FROM courses WHERE instructor_id = ?",
         [instructorId],
         (err, courseData) => {
-            if (err) return res.status(500).json({ error: err });
+            if (err) return res.status(500).json(err);
 
             db.query(
                 `SELECT COUNT(*) AS total
                  FROM enrollments
-                 WHERE course_id IN (SELECT id FROM courses WHERE instructor_id = ?)`,
+                 WHERE course_id IN (
+                    SELECT id FROM courses WHERE instructor_id = ?
+                 )`,
                 [instructorId],
                 (err, studentData) => {
-                    if (err) return res.status(500).json({ error: err });
+                    if (err) return res.status(500).json(err);
 
                     res.json({
                         totalCourses: courseData[0].total,
@@ -39,33 +51,30 @@ router.get("/dashboard", (req, res) => {
 ===================================================== */
 router.get("/courses", (req, res) => {
     const db = req.app.get("db");
-    const instructorId = req.user.id;
 
     db.query(
         "SELECT * FROM courses WHERE instructor_id = ?",
-        [instructorId],
+        [req.user.id],
         (err, rows) => {
-            if (err) return res.status(500).json({ error: err });
+            if (err) return res.status(500).json(err);
             res.json(rows);
         }
     );
 });
 
 /* =====================================================
-   GET STUDENTS OF A COURSE
+   STUDENTS
 ===================================================== */
 router.get("/course/:courseId/students", (req, res) => {
     const db = req.app.get("db");
-    const courseId = req.params.courseId;
-    const instructorId = req.user.id;
+    const { courseId } = req.params;
 
-    // ensure instructor owns the course
     db.query(
         "SELECT id FROM courses WHERE id = ? AND instructor_id = ?",
-        [courseId, instructorId],
+        [courseId, req.user.id],
         (err, rows) => {
-            if (err) return res.status(500).json({ error: err });
-            if (rows.length === 0)
+            if (err) return res.status(500).json(err);
+            if (!rows.length)
                 return res.status(403).json({ message: "Not your course" });
 
             db.query(
@@ -75,7 +84,7 @@ router.get("/course/:courseId/students", (req, res) => {
                  WHERE enrollments.course_id = ?`,
                 [courseId],
                 (err, result) => {
-                    if (err) return res.status(500).json({ error: err });
+                    if (err) return res.status(500).json(err);
                     res.json(result);
                 }
             );
@@ -84,85 +93,51 @@ router.get("/course/:courseId/students", (req, res) => {
 });
 
 /* =====================================================
-   ADD STUDENT TO COURSE
+   ADD STUDENT
 ===================================================== */
 router.post("/course/:courseId/add-student", (req, res) => {
     const db = req.app.get("db");
-    const courseId = req.params.courseId;
+    const { courseId } = req.params;
     const { name, email } = req.body;
-    const instructorId = req.user.id;
 
-    // verify ownership
     db.query(
         "SELECT id FROM courses WHERE id = ? AND instructor_id = ?",
-        [courseId, instructorId],
+        [courseId, req.user.id],
         (err, courseRows) => {
-            if (err) return res.status(500).json({ error: err });
-            if (courseRows.length === 0)
-                return res.status(403).json({ message: "Not your course" });
-
-            db.query("SELECT * FROM users WHERE email = ?", [email], (err, users) => {
-                if (err) return res.status(500).json({ error: err });
-
-                let studentId;
-
-                if (users.length === 0) {
-                    const defaultPass = "student123";
-
-                    db.query(
-                        "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'student')",
-                        [name, email, defaultPass],
-                        (err, result) => {
-                            if (err) return res.status(500).json({ error: err });
-
-                            studentId = result.insertId;
-
-                            db.query(
-                                "INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)",
-                                [studentId, courseId]
-                            );
-
-                            res.json({ message: "Student created and added!" });
-                        }
-                    );
-                } else {
-                    studentId = users[0].id;
-
-                    db.query(
-                        "INSERT IGNORE INTO enrollments (user_id, course_id) VALUES (?, ?)",
-                        [studentId, courseId]
-                    );
-
-                    res.json({ message: "Existing student added to course!" });
-                }
-            });
-        }
-    );
-});
-
-/* =====================================================
-   REMOVE STUDENT FROM COURSE
-===================================================== */
-router.delete("/course/:courseId/remove-student/:studentId", (req, res) => {
-    const db = req.app.get("db");
-    const { courseId, studentId } = req.params;
-    const instructorId = req.user.id;
-
-    // verify instructor owns course
-    db.query(
-        "SELECT id FROM courses WHERE id = ? AND instructor_id = ?",
-        [courseId, instructorId],
-        (err, rows) => {
-            if (err) return res.status(500).json({ error: err });
-            if (rows.length === 0)
+            if (err) return res.status(500).json(err);
+            if (!courseRows.length)
                 return res.status(403).json({ message: "Not your course" });
 
             db.query(
-                "DELETE FROM enrollments WHERE user_id = ? AND course_id = ?",
-                [studentId, courseId],
-                (err) => {
-                    if (err) return res.status(500).json({ error: err });
-                    res.json({ message: "Student removed successfully" });
+                "SELECT * FROM users WHERE email = ?",
+                [email],
+                (err, users) => {
+                    if (err) return res.status(500).json(err);
+
+                    if (!users.length) {
+                        const hashed = bcrypt.hashSync("student123", 10);
+
+                        db.query(
+                            "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'student')",
+                            [name, email, hashed],
+                            (err, result) => {
+                                if (err) return res.status(500).json(err);
+
+                                db.query(
+                                    "INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)",
+                                    [result.insertId, courseId]
+                                );
+
+                                res.json({ message: "Student created and added!" });
+                            }
+                        );
+                    } else {
+                        db.query(
+                            "INSERT IGNORE INTO enrollments (user_id, course_id) VALUES (?, ?)",
+                            [users[0].id, courseId]
+                        );
+                        res.json({ message: "Existing student added!" });
+                    }
                 }
             );
         }
@@ -170,110 +145,146 @@ router.delete("/course/:courseId/remove-student/:studentId", (req, res) => {
 });
 
 /* =====================================================
-   ASSIGNMENTS (TEXT + CODING)
+   ASSIGNMENTS
 ===================================================== */
-
-/* --- GET Assignments for Course --- */
 router.get("/course/:courseId/assignments", (req, res) => {
     const db = req.app.get("db");
     const { courseId } = req.params;
-    const instructorId = req.user.id;
 
     db.query(
-        "SELECT id FROM courses WHERE id = ? AND instructor_id = ?",
-        [courseId, instructorId],
+        "SELECT * FROM assignments WHERE course_id = ? ORDER BY created_at DESC",
+        [courseId],
         (err, rows) => {
-            if (err) return res.status(500).json({ error: err });
-            if (rows.length === 0)
-                return res.status(403).json({ message: "Not your course" });
-
-            db.query(
-                "SELECT * FROM assignments WHERE course_id = ? ORDER BY created_at DESC",
-                [courseId],
-                (err, assignments) => {
-                    if (err) return res.status(500).json({ error: err });
-                    res.json(assignments);
-                }
-            );
+            if (err) return res.status(500).json(err);
+            res.json(rows);
         }
     );
 });
 
-/* --- CREATE Assignment (supports coding fields) --- */
 router.post("/course/:courseId/assignments/add", (req, res) => {
     const db = req.app.get("db");
-    const instructorId = req.user.id;
     const { courseId } = req.params;
+    const { title, description, due_date, type, starter_code, test_cases } = req.body;
 
-    const {
-        title,
-        description,
-        due_date,
-        type = "text",
-        starter_code = null,
-        test_cases = null
-    } = req.body;
+    db.query(
+        `INSERT INTO assignments
+        (course_id, title, description, due_date, type, starter_code, test_cases)
+        VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [courseId, title, description, due_date, type, starter_code, test_cases],
+        (err) => {
+            if (err) return res.status(500).json(err);
+            res.json({ message: "Assignment created successfully!" });
+        }
+    );
+});
 
-    if (!title || !description || !due_date)
-        return res.status(400).json({ message: "Missing required fields" });
+/* =====================================================
+   COURSES
+===================================================== */
+router.post("/courses/add", (req, res) => {
+    const db = req.app.get("db");
+    const { title, description, category, level, image } = req.body;
+
+    db.query(
+        `INSERT INTO courses
+        (title, description, category, level, image, instructor_id)
+        VALUES (?, ?, ?, ?, ?, ?)`,
+        [
+            title,
+            description,
+            category || "General",
+            level || "Beginner",
+            image || "https://via.placeholder.com/300",
+            req.user.id
+        ],
+        (err) => {
+            if (err) return res.status(500).json(err);
+            res.json({ message: "Course created successfully!" });
+        }
+    );
+});
+
+/* =====================================================
+   VIDEOS (✅ FIXED)
+===================================================== */
+
+// GET videos
+router.get("/course/:courseId/videos", (req, res) => {
+    const db = req.app.get("db");
+
+    db.query(
+        "SELECT * FROM course_videos WHERE course_id = ? ORDER BY created_at DESC",
+        [req.params.courseId],
+        (err, rows) => {
+            if (err) return res.status(500).json(err);
+            res.json(rows);
+        }
+    );
+});
+
+// ADD video
+router.post("/course/:courseId/videos/add", (req, res) => {
+    const db = req.app.get("db");
+    const { courseId } = req.params;
+    const { title, video_url, duration } = req.body;
 
     db.query(
         "SELECT id FROM courses WHERE id = ? AND instructor_id = ?",
-        [courseId, instructorId],
+        [courseId, req.user.id],
         (err, rows) => {
-            if (err) return res.status(500).json({ error: err });
-            if (rows.length === 0)
+            if (err) return res.status(500).json(err);
+            if (!rows.length)
                 return res.status(403).json({ message: "Not your course" });
 
             db.query(
-                `INSERT INTO assignments 
-                (course_id, title, description, due_date, type, starter_code, test_cases)
-                 VALUES (?, ?, ?, ?, ?, ?, ?)`,
-                [
-                    courseId,
-                    title,
-                    description,
-                    due_date,
-                    type,
-                    starter_code,
-                    test_cases
-                ],
+                `INSERT INTO course_videos
+                (course_id, title, video_url, duration)
+                VALUES (?, ?, ?, ?)`,
+                [courseId, title, video_url, duration],
                 (err) => {
-                    if (err) return res.status(500).json({ error: err });
-                    res.json({ message: "Assignment created successfully!" });
+                    if (err) return res.status(500).json(err);
+                    res.json({ message: "Video added successfully!" });
                 }
             );
         }
     );
 });
 
-/* --- DELETE Assignment --- */
+
+/* =====================================================
+   DELETE ASSIGNMENT ✅ (FIX)
+===================================================== */
 router.delete("/assignment/:assignmentId/delete", (req, res) => {
     const db = req.app.get("db");
     const { assignmentId } = req.params;
     const instructorId = req.user.id;
 
+    // 1️⃣ Check assignment belongs to instructor
     db.query(
-        `SELECT assignments.id
-         FROM assignments
-         JOIN courses ON assignments.course_id = courses.id
-         WHERE assignments.id = ? AND courses.instructor_id = ?`,
+        `SELECT a.id
+         FROM assignments a
+         JOIN courses c ON a.course_id = c.id
+         WHERE a.id = ? AND c.instructor_id = ?`,
         [assignmentId, instructorId],
         (err, rows) => {
-            if (err) return res.status(500).json({ error: err });
-            if (rows.length === 0)
-                return res.status(403).json({ message: "Not authorized" });
+            if (err) return res.status(500).json(err);
 
+            if (!rows.length) {
+                return res.status(403).json({ message: "Not authorized" });
+            }
+
+            // 2️⃣ Delete assignment
             db.query(
                 "DELETE FROM assignments WHERE id = ?",
                 [assignmentId],
                 (err) => {
-                    if (err) return res.status(500).json({ error: err });
+                    if (err) return res.status(500).json(err);
                     res.json({ message: "Assignment deleted successfully!" });
                 }
             );
         }
     );
 });
+
 
 module.exports = router;
